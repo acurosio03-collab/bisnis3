@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- =========================================================
+         SMILJAN DUTCHBOOK - DEMO WEBSITE
+         GANTI BAGIAN YANG DITANDAI "GANTI" SEBELUM DIKIRIM KE OWNER
+
+         CATATAN:
+         - Foto galeri: 2 foto (dutchbook1.jpg, dutchbook2.jpg) itu
+           foto ASLI tempat ini (diambil dari listing Google Maps kamu).
+           Sisanya masih ilustrasi placeholder karena cuma itu foto
+           yang tersedia saat ini.
+         - Rating (4,8/331 ulasan), kategori (Kafe), kisaran harga
+           (Rp 25-50rb), dan jam tutup (22.00) diambil dari data
+           Google Maps yang kamu kasih, jadi itu udah data asli.
+         - Link Google Maps BELUM diisi karena cuma dapat screenshot,
+           bukan link share-nya. GANTI_LINK_GOOGLE_MAPS di bawah
+           perlu diisi manual dulu.
+         ========================================================= -->
+
+    <title>📚 Smiljan Dutchbook | Kafe & Ruang Baca</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700;9..144,900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            /* ==== PALET BARU: hijau tua kutu buku + gold hangat ==== */
+            --forest-950: #12211a;
+            --forest-900: #1c3327;
+            --forest-800: #294736;
+            --gold-500: #c9973c;
+            --gold-600: #a97a2a;
+            --gold-glow: #e8be6d;
+            --cream: #f6ecd9;
+            --cream-dim: #d9c9a8;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background:
+                radial-gradient(ellipse 1000px 600px at 15% -5%, rgba(201,151,60,0.28), transparent 62%),
+                radial-gradient(ellipse 800px 600px at 100% 15%, rgba(232,190,109,0.16), transparent 55%),
+                radial-gradient(ellipse 900px 700px at 50% 100%, rgba(41,71,54,0.55), transparent 60%),
+                linear-gradient(180deg, var(--forest-950) 0%, var(--forest-800) 45%, var(--forest-950) 100%);
+            color: var(--cream);
+        }
+
+        .font-display { font-family: 'Fraunces', serif; }
+
+        .glass-panel {
+            background: linear-gradient(135deg, rgba(41, 71, 54, 0.55) 0%, rgba(18, 33, 26, 0.78) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(201, 151, 60, 0.28);
+        }
+
+        .glow-effect { box-shadow: 0 0 80px -18px rgba(201, 151, 60, 0.45); }
+
+        .gold-gradient {
+            background: linear-gradient(120deg, #f6ecd9 0%, var(--gold-glow) 45%, var(--gold-500) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .btn-primary {
+            background: linear-gradient(120deg, var(--gold-500), var(--gold-600));
+            box-shadow: 0 10px 35px -8px rgba(201, 151, 60, 0.65);
+        }
+        .btn-primary:hover { filter: brightness(1.12); }
+
+        /* HERO ILUSTRASI (belum ada video asli) */
+        .hero-video-wrap {
+            position: relative;
+            width: 100vw;
+            margin-left: calc(50% - 50vw);
+            height: 62vh;
+            min-height: 380px;
+            max-height: 820px;
+            overflow: hidden;
+            background:
+                radial-gradient(ellipse 700px 500px at 20% 20%, rgba(232,190,109,0.28), transparent 60%),
+                radial-gradient(ellipse 600px 500px at 85% 75%, rgba(201,151,60,0.22), transparent 55%),
+                linear-gradient(160deg, var(--forest-900) 0%, var(--forest-950) 60%, #0c1712 100%);
+        }
+        @media (min-width: 1024px) { .hero-video-wrap { height: 82vh; } }
+
+        .hero-video-wrap video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+
+        .hero-visual-fallback {
+            position: absolute; inset: 0;
+            display: flex; align-items: center; justify-content: center;
+            opacity: 0.92;
+        }
+        .hero-visual-fallback svg {
+            width: min(58vw, 420px);
+            height: auto;
+            filter: drop-shadow(0 25px 45px rgba(0,0,0,0.45));
+        }
+
+        .steam {
+            transform-origin: center bottom;
+            animation: steamRise 3.2s ease-in-out infinite;
+            opacity: 0;
+        }
+        .steam-1 { animation-delay: 0s; }
+        .steam-2 { animation-delay: 0.9s; }
+
+        @keyframes steamRise {
+            0%   { transform: translateY(0) scaleX(1); opacity: 0; }
+            15%  { opacity: 0.5; }
+            50%  { transform: translateY(-20px) scaleX(1.4); opacity: 0.3; }
+            100% { transform: translateY(-42px) scaleX(1.8); opacity: 0; }
+        }
+
+        .hero-scrim {
+            position: absolute; inset: 0;
+            background: linear-gradient(180deg, rgba(18,33,26,0.45) 0%, rgba(18,33,26,0.05) 35%, rgba(18,33,26,0.30) 70%, var(--forest-950) 100%);
+        }
+
+        .menu-card { transition: transform .25s ease, border-color .25s ease; }
+        .menu-card:hover { transform: translateY(-4px); border-color: rgba(201,151,60,.6); }
+
+        .gallery-placeholder {
+            aspect-ratio: 1 / 1;
+            display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+            background:
+                radial-gradient(ellipse at 30% 20%, rgba(232,190,109,0.18), transparent 55%),
+                linear-gradient(150deg, var(--forest-800), var(--forest-950));
+        }
+        .gallery-placeholder .emoji { font-size: 2.2rem; filter: drop-shadow(0 6px 10px rgba(0,0,0,0.35)); }
+        .gallery-placeholder .label {
+            font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase; font-weight: 700;
+            color: var(--cream-dim); text-align: center; padding: 0 10px;
+        }
+        .gallery-photo { aspect-ratio: 1/1; overflow: hidden; }
+        .gallery-photo img { width: 100%; height: 100%; object-fit: cover; }
+
+        .fade-in { animation: fadeIn .45s ease both; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    </style>
+</head>
+
+<body class="text-zinc-100 selection:bg-amber-600 selection:text-white min-h-screen antialiased overflow-x-hidden">
+
+    <!-- HEADER -->
+    <header class="sticky top-0 z-50 bg-[#12211a]/85 backdrop-blur-2xl border-b border-amber-500/15 px-6 lg:px-20 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 via-yellow-600 to-[#294736] flex items-center justify-center shadow-xl shadow-amber-600/40 border border-amber-400/40">
+                <span class="text-white font-black text-xl tracking-tighter font-display">S</span>
+            </div>
+            <div>
+                <h1 class="text-sm font-extrabold tracking-[0.16em] text-cream font-display">SMILJAN DUTCHBOOK</h1>
+                <p class="text-[9px] tracking-[0.30em] text-amber-300 uppercase font-bold">Kafe &amp; Ruang Baca</p>
+            </div>
+        </div>
+
+        <div class="flex items-center space-x-5">
+            <a href="login.html" class="hidden sm:inline-block text-xs font-semibold text-[#d9c9a8] hover:text-white transition tracking-wider">
+                KELOLA MENU
+            </a>
+            <a href="#pesan" class="btn-primary relative rounded-2xl px-6 py-2.5 flex items-center justify-center text-xs font-bold text-white transition-all duration-300">
+                Pesan Sekarang
+            </a>
+        </div>
+    </header>
+
+
+    <!-- HERO -->
+    <section class="relative z-10">
+        <div class="hero-video-wrap">
+
+            <div class="hero-visual-fallback">
+                <svg viewBox="0 0 300 300" xmlns="http://www.w3.org/2000/svg">
+                    <g class="steam steam-1">
+                        <path d="M130 118 Q120 98 132 83 Q144 68 132 53" stroke="#f6ecd9" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.7"/>
+                    </g>
+                    <g class="steam steam-2">
+                        <path d="M170 118 Q160 98 172 83 Q184 68 172 53" stroke="#f6ecd9" stroke-width="5" fill="none" stroke-linecap="round" opacity="0.7"/>
+                    </g>
+                    <!-- tumpukan buku -->
+                    <rect x="70" y="205" width="160" height="16" rx="3" fill="#a97a2a"/>
+                    <rect x="82" y="189" width="136" height="16" rx="3" fill="#e8be6d"/>
+                    <rect x="94" y="173" width="112" height="16" rx="3" fill="#c9973c"/>
+                    <!-- cangkir di atas buku -->
+                    <path d="M108 123 h60 v22 a30 30 0 0 1 -60 0 z" fill="#f6ecd9"/>
+                    <path d="M168 133 q18 2 18 17 q0 15 -18 15" stroke="#f6ecd9" stroke-width="7" fill="none" stroke-linecap="round"/>
+                    <ellipse cx="138" cy="123" rx="30" ry="6" fill="#294736"/>
+                </svg>
+            </div>
+
+            <!--
+            VIDEO ASLI (aktifkan kalau sudah ada file video):
+            <video id="heroVideo" autoplay muted loop playsinline>
+                <source src="dutchbook.mp4" type="video/mp4">
+            </video>
+            -->
+
+            <div class="hero-scrim"></div>
+
+            <div class="absolute top-6 left-6 z-20 bg-[#12211a]/70 backdrop-blur-xl border border-amber-400/30 px-5 py-2.5 rounded-2xl text-left shadow-2xl">
+                <div class="flex items-center space-x-2">
+                    <span class="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse"></span>
+                    <p class="text-white font-extrabold text-[11px] tracking-widest">SMILJAN DUTCHBOOK</p>
+                </div>
+                <p class="text-amber-200 text-[9px] uppercase font-semibold tracking-wider mt-0.5">Kafe &amp; Ruang Baca</p>
+            </div>
+
+            <div class="absolute inset-x-0 bottom-0 pb-10 sm:pb-14 px-6 text-center">
+                <div class="inline-flex items-center space-x-2.5 bg-[#12211a]/70 border border-amber-400/35 px-4 py-1.5 rounded-full mb-5 shadow-2xl backdrop-blur-md">
+                    <span class="w-2 h-2 rounded-full bg-amber-400 animate-pulse"></span>
+                    <span class="text-[#f6ecd9] text-[11px] font-semibold tracking-[0.2em] uppercase">Welcome to Dutchbook</span>
+                </div>
+
+                <h2 class="font-display text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white max-w-4xl mx-auto leading-[1.05]">
+                    Ngopi Sambil
+                    <br>
+                    <span class="gold-gradient">Tenggelam di Buku</span>
+                </h2>
+
+                <p class="max-w-xl mx-auto mt-5 text-sm sm:text-base text-[#f6ecd9] leading-relaxed">
+                    Ruang baca hangat dengan rak buku penuh cerita, ditemani kopi &amp; teh pilihan.
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- QUICK INFO (data asli dari Google Maps) -->
+    <section class="relative z-10 px-6 -mt-2 sm:-mt-8">
+        <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4">
+
+            <div class="glass-panel rounded-2xl p-5 text-center">
+                <div class="text-2xl mb-2">☕</div>
+                <p class="text-[10px] uppercase tracking-widest text-amber-300 font-bold">Kategori</p>
+                <p class="text-sm font-bold text-white mt-1">Kafe</p>
+            </div>
+
+            <div class="glass-panel rounded-2xl p-5 text-center">
+                <div class="text-2xl mb-2">⭐</div>
+                <p class="text-[10px] uppercase tracking-widest text-amber-300 font-bold">Google Rating</p>
+                <p class="text-sm font-bold text-white mt-1">4,8 (331)</p>
+            </div>
+
+            <div class="glass-panel rounded-2xl p-5 text-center">
+                <div class="text-2xl mb-2">💰</div>
+                <p class="text-[10px] uppercase tracking-widest text-amber-300 font-bold">Kisaran Harga</p>
+                <p class="text-sm font-bold text-white mt-1">Rp 25-50rb</p>
+            </div>
+
+            <a href="GANTI_LINK_GOOGLE_MAPS" target="_blank" rel="noopener noreferrer" class="glass-panel rounded-2xl p-5 text-center hover:border-amber-400/60 transition">
+                <div class="text-2xl mb-2">📍</div>
+                <p class="text-[10px] uppercase tracking-widest text-amber-300 font-bold">Lokasi</p>
+                <p class="text-sm font-bold text-white mt-1">Lihat Maps</p>
+            </a>
+
+        </div>
+    </section>
+
+
+    <!-- MENU (data contoh/dummy) -->
+    <section id="menu" class="relative z-10 px-6 py-20 max-w-6xl mx-auto">
+        <div class="text-center mb-12">
+            <span class="text-amber-300 font-bold uppercase tracking-[0.3em] text-xs">Menu Dutchbook</span>
+            <h3 class="font-display text-3xl sm:text-4xl font-extrabold mt-3 text-white tracking-tight">Pilihan Menu</h3>
+            <p class="text-[#d9c9a8] text-sm mt-3 max-w-xl mx-auto">
+                Pilih menu favorit Anda. Harga dan daftar menu dapat dikelola melalui halaman admin.
+            </p>
+        </div>
+
+        <div id="daftarMenu" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5"></div>
+    </section>
+
+
+    <!-- PEMESANAN -->
+    <section id="pesan" class="relative z-10 px-6 py-16 max-w-4xl mx-auto">
+        <div class="glass-panel p-8 sm:p-12 rounded-[2.5rem] glow-effect relative overflow-hidden">
+            <div class="absolute -right-32 -bottom-32 w-64 h-64 bg-amber-500/20 rounded-full blur-[100px] pointer-events-none"></div>
+
+            <div class="text-center mb-10">
+                <span class="text-amber-300 text-xs font-bold tracking-[0.3em] uppercase">Pesan Dengan Mudah</span>
+                <h3 class="font-display text-3xl sm:text-4xl font-extrabold text-white tracking-tight mt-2">Pesan Menu Dutchbook</h3>
+                <p class="text-[#d9c9a8] text-xs mt-2 max-w-md mx-auto">
+                    Pilih menu yang Anda inginkan dan kirim pesanan melalui WhatsApp.
+                </p>
+            </div>
+
+            <form onsubmit="kirimPesanan(event)" class="space-y-6">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-[#f6ecd9] uppercase tracking-wider">Nama</label>
+                        <input type="text" id="namaPemesan" required class="w-full bg-[#294736]/70 border border-amber-400/25 rounded-2xl px-5 py-3.5 text-sm text-white focus:outline-none focus:border-amber-400 transition shadow-inner placeholder:text-[#a8967a]" placeholder="Masukkan nama...">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-[#f6ecd9] uppercase tracking-wider">Nomor Meja</label>
+                        <input type="text" id="nomorMeja" required class="w-full bg-[#294736]/70 border border-amber-400/25 rounded-2xl px-5 py-3.5 text-sm text-white focus:outline-none focus:border-amber-400 transition shadow-inner placeholder:text-[#a8967a]" placeholder="Contoh: Meja 05">
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-[#f6ecd9] uppercase tracking-wider">Pilih Menu</label>
+                        <select id="pilihanMenu" required class="w-full bg-[#294736]/70 border border-amber-400/25 rounded-2xl px-5 py-3.5 text-sm text-white focus:outline-none focus:border-amber-400 transition shadow-inner"></select>
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-[#f6ecd9] uppercase tracking-wider">Kuantitas</label>
+                        <input type="number" id="jumlahPesanan" min="1" value="1" required class="w-full bg-[#294736]/70 border border-amber-400/25 rounded-2xl px-5 py-3.5 text-sm text-white focus:outline-none focus:border-amber-400 transition shadow-inner">
+                    </div>
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-[#f6ecd9] uppercase tracking-wider">Catatan Khusus (Opsional)</label>
+                    <textarea id="catatanPesanan" rows="2" class="w-full bg-[#294736]/70 border border-amber-400/25 rounded-2xl px-5 py-3.5 text-sm text-white focus:outline-none focus:border-amber-400 transition shadow-inner placeholder:text-[#a8967a]" placeholder="Contoh: less sugar, tanpa es, dll."></textarea>
+                </div>
+
+                <button type="submit" class="btn-primary w-full relative rounded-2xl py-4 flex items-center justify-center text-sm font-black text-white tracking-wider transition-all">
+                    PESAN SEKARANG VIA WHATSAPP 💬
+                </button>
+            </form>
+        </div>
+    </section>
+
+
+    <!-- GALERI: 2 foto asli + sisanya ilustrasi placeholder -->
+    <section class="relative z-10 px-6 py-20 max-w-7xl mx-auto border-t border-amber-500/15">
+        <div class="text-center mb-12">
+            <span class="text-amber-300 font-bold uppercase tracking-[0.3em] text-xs">Smiljan Dutchbook</span>
+            <h4 class="font-display text-3xl sm:text-4xl font-extrabold mt-3 text-white tracking-tight">Suasana &amp; Pilihan Kami</h4>
+            <p class="text-[#d9c9a8] text-xs mt-3 max-w-md mx-auto">
+                *2 foto pertama foto asli tempat ini, sisanya masih ilustrasi contoh.
+            </p>
+        </div>
+
+        <div id="galeri" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-5"></div>
+    </section>
+
+
+    <!-- TENTANG -->
+    <section class="relative z-10 px-6 py-20 max-w-4xl mx-auto">
+        <div class="glass-panel p-10 sm:p-14 rounded-[2.5rem]">
+            <div class="text-center">
+                <span class="text-amber-300 text-xs font-bold tracking-[0.3em] uppercase">Tentang Dutchbook</span>
+                <h3 class="font-display text-3xl sm:text-4xl font-black mt-3 text-white">Kafe &amp; Ruang Baca</h3>
+                <p class="text-[#d9c9a8] text-sm leading-7 mt-6 max-w-2xl mx-auto">
+                    GANTI TEKS INI dengan deskripsi resmi dari owner Smiljan Dutchbook.
+                    Untuk demo awal, gunakan deskripsi singkat dan jangan mengarang
+                    informasi yang belum kamu dapatkan dari owner.
+                </p>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- LOKASI & KONTAK -->
+    <section id="kontak" class="relative z-10 px-6 py-20 max-w-4xl mx-auto text-center border-t border-amber-500/15">
+        <div class="glass-panel p-10 sm:p-14 rounded-[2.5rem] relative overflow-hidden">
+            <h3 class="font-display text-2xl sm:text-3xl font-black mb-4 text-white">📍 Lokasi Smiljan Dutchbook</h3>
+
+            <p class="text-[#d9c9a8] mb-2 text-sm leading-relaxed max-w-md mx-auto">
+                GANTI DENGAN ALAMAT LENGKAP
+            </p>
+            <p class="text-[#d9c9a8] mb-8 text-sm leading-relaxed max-w-md mx-auto">
+                Buka setiap hari &middot; Tutup pukul 22.00
+            </p>
+
+            <div class="flex flex-col sm:flex-row gap-3 justify-center">
+                <a href="https://maps.app.goo.gl/JacAQxeCPFef7pfe6?g_st=ac" target="_blank" rel="noopener noreferrer" class="inline-block bg-[#294736] hover:bg-[#375f46] text-white border border-amber-400/35 font-bold px-8 py-4 rounded-2xl transition shadow-2xl text-xs tracking-widest uppercase">
+                    📍 Buka Google Maps
+                </a>
+
+                <!-- GANTI NOMOR WA -->
+                <a href="https://wa.me/+6283185954674?text=Halo%20Smiljan%20Dutchbook%2C%20saya%20ingin%20bertanya." target="
+          💬 WhatsApp
+                </a>
+            </div>
+        </div>
+    </section>
+
+
+    <!-- FOOTER -->
+    <footer class="relative z-10 text-center py-10 border-t border-amber-500/15 text-[#a8967a] text-xs bg-[#0c1712]">
+        <p>&copy; 2026 Smiljan Dutchbook. All Rights Reserved.</p>
+        <p class="mt-2 text-[10px] opacity-60">DEMO WEBSITE — KONSEP UNTUK SMILJAN DUTCHBOOK</p>
+    </footer>
+
+
+    <!-- KONFIGURASI -->
+    <script>
+        const CONFIG = {
+            /* GANTI nomor WhatsApp asli, format: 628xxxxxxxxxx */
+            whatsapp: "628XXXXXXXXXX",
+
+            /* GANTI dengan link share Google Maps kamu */
+            googleMaps: "GANTI_LINK_GOOGLE_MAPS",
+
+            businessName: "Smiljan Dutchbook"
+        };
+    </script>
+
+
+    <!-- MENU DINAMIS (data contoh) -->
+    <script>
+        const KEY_PRODUK = "daftarProduk_dutchbook";
+        const VERSI_DATA = "v1-demo-contoh";
+
+        function seedProdukJikaKosong() {
+            const versiTersimpan = localStorage.getItem(KEY_PRODUK + "_versi");
+            if (versiTersimpan !== VERSI_DATA) {
+                const defaultProduk = [
+                    { id: "dutchbook_demo_1", name: "Kopi Hitam", price: 18000 },
+                    { id: "dutchbook_demo_2", name: "Kopi Susu Gula Aren", price: 25000 },
+                    { id: "dutchbook_demo_3", name: "Es Kopi Jeruk", price: 27000 },
+                    { id: "dutchbook_demo_4", name: "Matcha Latte", price: 30000 },
+                    { id: "dutchbook_demo_5", name: "Chocolate Milk", price: 28000 },
+                    { id: "dutchbook_demo_6", name: "Teh Tarik", price: 20000 },
+                    { id: "dutchbook_demo_7", name: "Croissant Butter", price: 22000 },
+                    { id: "dutchbook_demo_8", name: "Banana Bread", price: 24000 }
+                ];
+                localStorage.setItem(KEY_PRODUK, JSON.stringify(defaultProduk));
+                localStorage.setItem(KEY_PRODUK + "_versi", VERSI_DATA);
+            }
+        }
+
+        function formatRupiah(angka) {
+            return "Rp " + Number(angka).toLocaleString("id-ID");
+        }
+
+        function iconUntukMenu(nama) {
+            const n = nama.toLowerCase();
+            if (n.includes("kopi") || n.includes("espresso")) return "☕";
+            if (n.includes("teh") || n.includes("tarik")) return "🍵";
+            if (n.includes("matcha")) return "🍵";
+            if (n.includes("choco")) return "🍫";
+            if (n.includes("croissant") || n.includes("bread") || n.includes("roti")) return "🥐";
+            return "☕";
+        }
+
+        function muatMenu() {
+            seedProdukJikaKosong();
+
+            const produk = JSON.parse(localStorage.getItem(KEY_PRODUK)) || [];
+            const select = document.getElementById("pilihanMenu");
+            const daftarMenu = document.getElementById("daftarMenu");
+
+            select.innerHTML = "";
+            daftarMenu.innerHTML = "";
+
+            if (produk.length === 0) {
+                const opt = document.createElement("option");
+                opt.textContent = "Menu belum tersedia";
+                opt.disabled = true;
+                select.appendChild(opt);
+
+                daftarMenu.innerHTML = `<div class="col-span-full text-center text-[#d9c9a8]">Menu belum tersedia.</div>`;
+                return;
+            }
+
+            produk.forEach((item) => {
+                const opt = document.createElement("option");
+                opt.value = `${item.name} (${formatRupiah(item.price)})`;
+                opt.textContent = `${item.name} - ${formatRupiah(item.price)}`;
+                select.appendChild(opt);
+
+                const card = document.createElement("div");
+                card.className = "menu-card glass-panel rounded-3xl p-6 fade-in";
+                card.innerHTML = `
+                    <div class="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-400/25 flex items-center justify-center text-2xl mb-5">
+                        ${iconUntukMenu(item.name)}
+                    </div>
+                    <h4 class="text-lg font-bold text-white">${escapeHtml(item.name)}</h4>
+                    <p class="text-amber-300 font-extrabold mt-3">${formatRupiah(item.price)}</p>
+                `;
+                daftarMenu.appendChild(card);
+            });
+        }
+
+        function escapeHtml(value) {
+            return String(value)
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        }
+
+        muatMenu();
+    </script>
+
+
+    <!-- GALERI DINAMIS: 2 foto asli + placeholder ilustrasi -->
+    <script>
+        const galeriFotoAsli = [
+            { src: "dutchbook1.jpg", alt: "Ruang baca Smiljan Dutchbook" },
+            { src: "dutchbook2.jpg", alt: "Rak buku Smiljan Dutchbook" }
+        ];
+
+        const labelGaleriContoh = [
+            { emoji: "☕", label: "Kopi Susu Gula Aren" },
+            { emoji: "🍫", label: "Chocolate Milk" },
+            { emoji: "🥐", label: "Croissant Butter" },
+            { emoji: "📚", label: "Sudut Baca" },
+            { emoji: "🍵", label: "Matcha Latte" },
+            { emoji: "🕯️", label: "Suasana Sore" }
+        ];
+
+        function muatGaleri() {
+            const galeri = document.getElementById("galeri");
+
+            galeriFotoAsli.forEach((foto) => {
+                const wrapper = document.createElement("div");
+                wrapper.className = "glass-panel rounded-2xl overflow-hidden group shadow-xl gallery-photo";
+
+                const img = document.createElement("img");
+                img.src = foto.src;
+                img.alt = foto.alt;
+                img.className = "group-hover:scale-105 transition duration-700";
+                img.onerror = function () { wrapper.style.display = "none"; };
+
+                wrapper.appendChild(img);
+                galeri.appendChild(wrapper);
+            });
+
+            labelGaleriContoh.forEach((item) => {
+                const wrapper = document.createElement("div");
+                wrapper.className = "glass-panel rounded-2xl overflow-hidden group shadow-xl gallery-placeholder";
+                wrapper.innerHTML = `
+                    <span class="emoji">${item.emoji}</span>
+                    <span class="label">${escapeHtml(item.label)}</span>
+                `;
+                galeri.appendChild(wrapper);
+            });
+        }
+
+        muatGaleri();
+    </script>
+
+
+    <!-- PEMESANAN WHATSAPP -->
+    <script>
+        function kirimPesanan(e) {
+            e.preventDefault();
+
+            const nama = document.getElementById("namaPemesan").value.trim();
+            const meja = document.getElementById("nomorMeja").value.trim();
+            const menu = document.getElementById("pilihanMenu").value;
+            const jumlah = document.getElementById("jumlahPesanan").value;
+            const catatan = document.getElementById("catatanPesanan").value.trim() || "Tidak ada catatan";
+
+            let orders = JSON.parse(localStorage.getItem("daftarPesanan_dutchbook")) || [];
+
+            orders.push({
+                customer: nama,
+                table: meja,
+                orderDetails: `${jumlah}x ${menu}`,
+                note: catatan,
+                status: "Baru",
+                time: new Date().toLocaleTimeString("id-ID", { hour: "2-digit", minute: "2-digit" })
+            });
+
+            localStorage.setItem("daftarPesanan_dutchbook", JSON.stringify(orders));
+
+            const pesan =
+`Halo Smiljan Dutchbook, saya ingin melakukan pemesanan.
+
+*Nama:* ${nama}
+*Nomor Meja:* ${meja}
+*Menu:* ${jumlah}x ${menu}
+*Catatan:* ${catatan}`;
+
+            if (!CONFIG.whatsapp || CONFIG.whatsapp.includes("X")) {
+                alert("Nomor WhatsApp Dutchbook belum diatur. Silakan isi CONFIG.whatsapp terlebih dahulu.");
+                return;
+            }
+
+            const urlWa = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(pesan)}`;
+            window.open(urlWa, "_blank", "noopener,noreferrer");
+        }
+    </script>
+
+
+    <!-- UPDATE LINK MAPS DARI CONFIG -->
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const mapLinks = document.querySelectorAll('a[href="GANTI_LINK_GOOGLE_MAPS"]');
+            mapLinks.forEach((link) => { link.href = CONFIG.googleMaps; });
+        });
+    </script>
+
+</body>
+                </html>
