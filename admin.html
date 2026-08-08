@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard | Smiljan Dutchbook</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700;9..144,900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --forest-950: #12211a;
+            --forest-900: #1c3327;
+            --forest-800: #294736;
+            --gold-500: #c9973c;
+            --gold-600: #a97a2a;
+            --gold-glow: #e8be6d;
+            --cream: #f6ecd9;
+            --cream-dim: #d9c9a8;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background:
+                radial-gradient(ellipse 1000px 600px at 15% -5%, rgba(201,151,60,0.26), transparent 62%),
+                radial-gradient(ellipse 800px 600px at 100% 15%, rgba(232,190,109,0.15), transparent 55%),
+                linear-gradient(180deg, var(--forest-950) 0%, var(--forest-800) 45%, var(--forest-950) 100%);
+            color: var(--cream);
+        }
+        .font-display { font-family: 'Fraunces', serif; }
+        .glass-panel {
+            background: linear-gradient(135deg, rgba(41, 71, 54, 0.55) 0%, rgba(18, 33, 26, 0.78) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(201, 151, 60, 0.28);
+        }
+        .glow-effect { box-shadow: 0 0 70px -20px rgba(201, 151, 60, 0.45); }
+        .btn-primary {
+            background: linear-gradient(120deg, var(--gold-500), var(--gold-600));
+            box-shadow: 0 10px 35px -8px rgba(201, 151, 60, 0.65);
+        }
+        .btn-primary:hover { filter: brightness(1.12); }
+        .btn-ghost { background: rgba(41, 71, 54, 0.6); border: 1px solid rgba(201, 151, 60, 0.28); }
+        .btn-ghost:hover { background: rgba(41, 71, 54, 0.85); }
+        .status-pill { font-size: 10px; letter-spacing: .08em; padding: 4px 10px; border-radius: 999px; font-weight: 800; text-transform: uppercase; }
+        .status-baru { background: rgba(201,151,60,0.22); color: var(--gold-glow); border: 1px solid rgba(201,151,60,0.45); }
+        .status-diproses { background: rgba(232,190,109,0.18); color: var(--gold-glow); border: 1px solid rgba(232,190,109,0.4); }
+        .status-selesai { background: rgba(74, 222, 128, 0.16); color: #4ade80; border: 1px solid rgba(74, 222, 128, 0.4); }
+    </style>
+    <script>
+        /*
+         * Kunci sesi login. HARUS SAMA PERSIS dengan login.html.
+         */
+        if (sessionStorage.getItem('dutchbookAdminAuth') !== 'true') {
+            window.location.href = 'login.html';
+        }
+    </script>
+</head>
+<body class="text-zinc-100 min-h-screen antialiased">
+
+    <header class="sticky top-0 z-50 bg-[#12211a]/85 backdrop-blur-2xl border-b border-amber-500/15 px-6 lg:px-20 py-4 flex justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-500 via-yellow-600 to-[#294736] flex items-center justify-center shadow-xl shadow-amber-600/40 border border-amber-400/40">
+                <span class="text-white font-black text-xl tracking-tighter font-display">S</span>
+            </div>
+            <div>
+                <h1 class="text-sm font-extrabold tracking-[0.25em] text-cream font-display">ADMIN DASHBOARD</h1>
+                <p class="text-[9px] tracking-[0.35em] text-amber-300 uppercase font-bold">Dutchbook Control Panel</p>
+            </div>
+        </div>
+        <div class="flex items-center">
+            <a href="index.html" class="btn-ghost text-xs font-semibold text-[#f6ecd9] px-5 py-2.5 rounded-2xl transition tracking-wider">← Kembali ke Situs</a>
+            <button id="btnLogout" class="btn-ghost text-xs font-semibold text-[#e8be6d] px-5 py-2.5 rounded-2xl transition tracking-wider ml-3">Keluar</button>
+        </div>
+    </header>
+
+    <main class="relative z-10 px-6 py-12 max-w-6xl mx-auto space-y-14">
+
+        <section class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+            <div class="glass-panel rounded-3xl p-6">
+                <p class="text-[10px] uppercase tracking-widest text-[#d9c9a8] font-bold">Total Produk</p>
+                <p id="statTotalProduk" class="font-display text-4xl font-black text-white mt-2">0</p>
+            </div>
+            <div class="glass-panel rounded-3xl p-6">
+                <p class="text-[10px] uppercase tracking-widest text-[#d9c9a8] font-bold">Total Pesanan</p>
+                <p id="statTotalPesanan" class="font-display text-4xl font-black text-white mt-2">0</p>
+            </div>
+            <div class="glass-panel rounded-3xl p-6">
+                <p class="text-[10px] uppercase tracking-widest text-[#d9c9a8] font-bold">Pesanan Baru</p>
+                <p id="statPesananBaru" class="font-display text-4xl font-black text-white mt-2">0</p>
+            </div>
+        </section>
+
+        <div class="glass-panel rounded-2xl px-6 py-4 text-xs text-[#d9c9a8] leading-relaxed">
+            ⚠️ <b class="text-white">Perlu diketahui:</b> data produk &amp; pesanan tersimpan di
+            <b class="text-white">browser HP/laptop ini saja</b> (localStorage), belum tersambung ke semua perangkat.
+            Cukup buat demo/uji coba tampilan; untuk dipakai beneran butuh database (misal Supabase/Firebase).
+        </div>
+
+        <section>
+            <div class="mb-6">
+                <span class="text-amber-300 text-xs font-bold tracking-[0.3em] uppercase">Menu Management</span>
+                <h2 class="font-display text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-1">Kelola Produk</h2>
+            </div>
+
+            <div class="glass-panel glow-effect rounded-[2rem] p-6 sm:p-8 mb-6">
+                <form id="formProduk" class="grid grid-cols-1 sm:grid-cols-[2fr_1fr_auto] gap-4 items-end">
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-[#f6ecd9] uppercase tracking-wider">Nama Produk</label>
+                        <input type="text" id="inputNamaProduk" required placeholder="Contoh: Matcha Latte" class="w-full bg-[#294736]/70 border border-amber-400/25 rounded-2xl px-5 py-3.5 text-sm text-white focus:outline-none focus:border-amber-400 transition placeholder:text-[#a8967a]">
+                    </div>
+                    <div class="space-y-2">
+                        <label class="block text-xs font-bold text-[#f6ecd9] uppercase tracking-wider">Harga (Rp)</label>
+                        <input type="number" id="inputHargaProduk" required min="0" placeholder="25000" class="w-full bg-[#294736]/70 border border-amber-400/25 rounded-2xl px-5 py-3.5 text-sm text-white focus:outline-none focus:border-amber-400 transition placeholder:text-[#a8967a]">
+                    </div>
+                    <button type="submit" class="btn-primary rounded-2xl px-6 py-3.5 text-sm font-black text-white tracking-wider whitespace-nowrap">+ Tambah Produk</button>
+                </form>
+            </div>
+
+            <div id="daftarProdukWrap" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4"></div>
+            <p id="produkKosong" class="hidden text-center text-[#a8967a] text-sm py-10">Belum ada produk. Tambahkan produk pertama Anda di atas.</p>
+        </section>
+
+        <section>
+            <div class="mb-6 flex items-center justify-between flex-wrap gap-3">
+                <div>
+                    <span class="text-amber-300 text-xs font-bold tracking-[0.3em] uppercase">Order Log</span>
+                    <h2 class="font-display text-2xl sm:text-3xl font-extrabold text-white tracking-tight mt-1">Catatan Pemesanan</h2>
+                </div>
+                <div class="flex items-center gap-3 flex-wrap">
+                    <select id="filterStatus" class="btn-ghost text-xs font-semibold text-[#f6ecd9] px-4 py-2.5 rounded-2xl focus:outline-none">
+                        <option value="Semua">Semua Status</option>
+                        <option value="Baru">Baru</option>
+                        <option value="Diproses">Diproses</option>
+                        <option value="Selesai">Selesai</option>
+                    </select>
+                    <button id="btnHapusSemuaPesanan" class="btn-ghost text-xs font-semibold text-[#f6ecd9] px-5 py-2.5 rounded-2xl transition tracking-wider">Hapus Semua</button>
+                </div>
+            </div>
+
+            <div id="daftarPesananWrap" class="space-y-4"></div>
+            <p id="pesananKosong" class="hidden text-center text-[#a8967a] text-sm py-10">Belum ada pesanan masuk.</p>
+        </section>
+
+    </main>
+
+    <footer class="relative z-10 text-center py-10 border-t border-amber-500/15 text-[#a8967a] text-xs bg-[#0c1712] mt-10">
+        <p>&copy; 2026 SMILJAN DUTCHBOOK. Admin Control Panel.</p>
+    </footer>
+
+    <script>
+        const KEY_PRODUK = 'daftarProduk_dutchbook';
+        const KEY_PESANAN = 'daftarPesanan_dutchbook';
+        const VERSI_DATA = 'v1-demo-contoh';
+
+        function seedProdukJikaKosong() {
+            const versiTersimpan = localStorage.getItem(KEY_PRODUK + '_versi');
+            if (versiTersimpan !== VERSI_DATA) {
+                const defaultProduk = [
+                    { id: cryptoId(), name: 'Kopi Hitam', price: 18000 },
+                    { id: cryptoId(), name: 'Kopi Susu Gula Aren', price: 25000 },
+                    { id: cryptoId(), name: 'Es Kopi Jeruk', price: 27000 },
+                    { id: cryptoId(), name: 'Matcha Latte', price: 30000 },
+                    { id: cryptoId(), name: 'Chocolate Milk', price: 28000 },
+                    { id: cryptoId(), name: 'Teh Tarik', price: 20000 },
+                    { id: cryptoId(), name: 'Croissant Butter', price: 22000 },
+                    { id: cryptoId(), name: 'Banana Bread', price: 24000 }
+                ];
+                localStorage.setItem(KEY_PRODUK, JSON.stringify(defaultProduk));
+                localStorage.setItem(KEY_PRODUK + '_versi', VERSI_DATA);
+            }
+        }
+
+        function cryptoId() { return 'p_' + Date.now() + '_' + Math.random().toString(36).slice(2, 8); }
+        function ambilProduk() { return JSON.parse(localStorage.getItem(KEY_PRODUK)) || []; }
+        function simpanProduk(list) { localStorage.setItem(KEY_PRODUK, JSON.stringify(list)); }
+        function ambilPesanan() { return JSON.parse(localStorage.getItem(KEY_PESANAN)) || []; }
+        function simpanPesanan(list) { localStorage.setItem(KEY_PESANAN, JSON.stringify(list)); }
+        function formatRupiah(angka) { return 'Rp ' + Number(angka).toLocaleString('id-ID'); }
+
+        function renderProduk() {
+            const produk = ambilProduk();
+            const wrap = document.getElementById('daftarProdukWrap');
+            const kosong = document.getElementById('produkKosong');
+            wrap.innerHTML = '';
+
+            if (produk.length === 0) {
+                kosong.classList.remove('hidden');
+            } else {
+                kosong.classList.add('hidden');
+                produk.forEach(item => {
+                    const card = document.createElement('div');
+                    card.className = 'glass-panel rounded-2xl p-5 flex items-center justify-between gap-3';
+                    card.innerHTML = `
+                        <div class="min-w-0 flex-1">
+                            <p class="font-bold text-white text-sm truncate">${escapeHtml(item.name)}</p>
+                            <div class="flex items-center gap-2 mt-1.5">
+                                <span class="text-amber-300 text-xs font-semibold">${formatRupiah(item.price)}</span>
+                                <button data-id="${item.id}" class="btnEditHarga text-[10px] font-bold text-[#d9c9a8] hover:text-white underline underline-offset-2">Ubah harga</button>
+                            </div>
+                        </div>
+                        <button data-id="${item.id}" class="btnHapusProduk flex-shrink-0 text-xs font-bold text-[#e8be6d] hover:text-white bg-amber-600/10 hover:bg-amber-600/30 border border-amber-500/30 rounded-xl px-4 py-2 transition">Hapus</button>
+                    `;
+                    wrap.appendChild(card);
+                });
+            }
+
+            document.getElementById('statTotalProduk').textContent = produk.length;
+
+            document.querySelectorAll('.btnHapusProduk').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.getAttribute('data-id');
+                    if (confirm('Hapus produk ini dari menu?')) {
+                        simpanProduk(ambilProduk().filter(p => p.id !== id));
+                        renderProduk();
+                    }
+                });
+            });
+
+            document.querySelectorAll('.btnEditHarga').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const id = btn.getAttribute('data-id');
+                    const list = ambilProduk();
+                    const item = list.find(p => p.id === id);
+                    if (!item) return;
+                    const hargaBaru = prompt(`Harga baru untuk "${item.name}" (Rp):`, item.price);
+                    if (hargaBaru === null) return;
+                    const angka = Number(hargaBaru);
+                    if (isNaN(angka) || angka < 0) { alert('Harga tidak valid.'); return; }
+                    item.price = angka;
+                    simpanProduk(list);
+                    renderProduk();
+                });
+            });
+        }
+
+        function statusClass(status) {
+            if (status === 'Selesai') return 'status-selesai';
+            if (status === 'Diproses') return 'status-diproses';
+            return 'status-baru';
+        }
+
+        function renderPesanan() {
+            const semuaPesanan = ambilPesanan();
+            const filter = document.getElementById('filterStatus').value;
+            const wrap = document.getElementById('daftarPesananWrap');
+            const kosong = document.getElementById('pesananKosong');
+            wrap.innerHTML = '';
+
+            const pesananTampil = semuaPesanan
+                .map((order, idx) => ({ order, idx }))
+                .filter(({ order }) => filter === 'Semua' || (order.status || 'Baru') === filter);
+
+            if (pesananTampil.length === 0) {
+                kosong.classList.remove('hidden');
+                kosong.textContent = semuaPesanan.length === 0 ? 'Belum ada pesanan masuk.' : `Tidak ada pesanan dengan status "${filter}".`;
+            } else {
+                kosong.classList.add('hidden');
+                pesananTampil.slice().reverse().forEach(({ order, idx }) => {
+                    const card = document.createElement('div');
+                    card.className = 'glass-panel rounded-2xl p-5 sm:p-6';
+                    card.innerHTML = `
+                        <div class="flex flex-wrap items-start justify-between gap-3 mb-3">
+                            <div>
+                                <p class="font-bold text-white text-sm">${escapeHtml(order.customer || '-')}</p>
+                                <p class="text-[#d9c9a8] text-xs mt-0.5">Meja: ${escapeHtml(order.table || '-')} • ${escapeHtml(order.time || '-')}</p>
+                            </div>
+                            <span class="status-pill ${statusClass(order.status)}">${escapeHtml(order.status || 'Baru')}</span>
+                        </div>
+                        <p class="text-sm text-[#f6ecd9] mb-1"><span class="text-amber-300 font-semibold">Pesanan:</span> ${escapeHtml(order.orderDetails || '-')}</p>
+                        <p class="text-sm text-[#d9c9a8] mb-4"><span class="text-amber-300 font-semibold">Catatan:</span> ${escapeHtml(order.note || '-')}</p>
+                        <div class="flex flex-wrap items-center gap-3">
+                            <select data-idx="${idx}" class="selectStatus bg-[#294736]/70 border border-amber-400/25 rounded-xl px-4 py-2 text-xs text-white focus:outline-none focus:border-amber-400">
+                                <option value="Baru" ${order.status === 'Baru' ? 'selected' : ''}>Baru</option>
+                                <option value="Diproses" ${order.status === 'Diproses' ? 'selected' : ''}>Diproses</option>
+                                <option value="Selesai" ${order.status === 'Selesai' ? 'selected' : ''}>Selesai</option>
+                            </select>
+                            <button data-idx="${idx}" class="btnHapusPesanan text-xs font-bold text-[#e8be6d] hover:text-white bg-amber-600/10 hover:bg-amber-600/30 border border-amber-500/30 rounded-xl px-4 py-2 transition">Hapus Pesanan</button>
+                        </div>
+                    `;
+                    wrap.appendChild(card);
+                });
+            }
+
+            document.getElementById('statTotalPesanan').textContent = semuaPesanan.length;
+            document.getElementById('statPesananBaru').textContent = semuaPesanan.filter(p => (p.status || 'Baru') === 'Baru').length;
+
+            document.querySelectorAll('.selectStatus').forEach(sel => {
+                sel.addEventListener('change', () => {
+                    const idx = parseInt(sel.getAttribute('data-idx'));
+                    const list = ambilPesanan();
+                    list[idx].status = sel.value;
+                    simpanPesanan(list);
+                    renderPesanan();
+                });
+            });
+
+            document.querySelectorAll('.btnHapusPesanan').forEach(btn => {
+                btn.addEventListener('click', () => {
+                    if (confirm('Hapus catatan pesanan ini?')) {
+                        const idx = parseInt(btn.getAttribute('data-idx'));
+                        const list = ambilPesanan();
+                        list.splice(idx, 1);
+                        simpanPesanan(list);
+                        renderPesanan();
+                    }
+                });
+            });
+        }
+
+        function escapeHtml(str) {
+            const div = document.createElement('div');
+            div.textContent = str;
+            return div.innerHTML;
+        }
+
+        document.getElementById('formProduk').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nama = document.getElementById('inputNamaProduk').value.trim();
+            const harga = document.getElementById('inputHargaProduk').value;
+            if (!nama || harga === '') return;
+            const list = ambilProduk();
+            list.push({ id: cryptoId(), name: nama, price: Number(harga) });
+            simpanProduk(list);
+            document.getElementById('formProduk').reset();
+            renderProduk();
+        });
+
+        document.getElementById('filterStatus').addEventListener('change', renderPesanan);
+
+        document.getElementById('btnHapusSemuaPesanan').addEventListener('click', () => {
+            if (confirm('Hapus SEMUA catatan pemesanan? Tindakan ini tidak bisa dibatalkan.')) {
+                simpanPesanan([]);
+                renderPesanan();
+            }
+        });
+
+        document.getElementById('btnLogout').addEventListener('click', () => {
+            sessionStorage.removeItem('dutchbookAdminAuth');
+            window.location.href = 'login.html';
+        });
+
+        seedProdukJikaKosong();
+        renderProduk();
+        renderPesanan();
+    </script>
+</body>
+  </html>
+
