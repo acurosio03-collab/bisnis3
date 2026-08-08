@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="id" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin | Smiljan Dutchbook</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,500;9..144,600;9..144,700;9..144,900&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
+
+        :root {
+            --forest-950: #12211a;
+            --forest-900: #1c3327;
+            --forest-800: #294736;
+            --gold-500: #c9973c;
+            --gold-600: #a97a2a;
+            --gold-glow: #e8be6d;
+            --cream: #f6ecd9;
+            --cream-dim: #d9c9a8;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background:
+                radial-gradient(ellipse 1000px 600px at 15% -5%, rgba(201,151,60,0.28), transparent 62%),
+                radial-gradient(ellipse 800px 600px at 100% 15%, rgba(232,190,109,0.16), transparent 55%),
+                linear-gradient(180deg, var(--forest-950) 0%, var(--forest-800) 45%, var(--forest-950) 100%);
+            color: var(--cream);
+        }
+        .font-display { font-family: 'Fraunces', serif; }
+        .glass-panel {
+            background: linear-gradient(135deg, rgba(41, 71, 54, 0.55) 0%, rgba(18, 33, 26, 0.78) 100%);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(201, 151, 60, 0.28);
+        }
+        .glow-effect { box-shadow: 0 0 80px -18px rgba(201, 151, 60, 0.45); }
+        .btn-primary {
+            background: linear-gradient(120deg, var(--gold-500), var(--gold-600));
+            box-shadow: 0 10px 35px -8px rgba(201, 151, 60, 0.65);
+        }
+        .btn-primary:hover { filter: brightness(1.12); }
+        .shake { animation: shake .4s ease; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-8px); }
+            40%, 80% { transform: translateX(8px); }
+        }
+    </style>
+</head>
+<body class="text-zinc-100 min-h-screen antialiased flex items-center justify-center px-6">
+
+    <div class="w-full max-w-sm">
+
+        <div class="text-center mb-8">
+            <div class="w-16 h-16 mx-auto rounded-2xl bg-gradient-to-tr from-amber-500 via-yellow-600 to-[#294736] flex items-center justify-center shadow-2xl shadow-amber-600/40 border border-amber-400/40 mb-4">
+                <span class="text-white font-black text-2xl tracking-tighter font-display">S</span>
+            </div>
+            <h1 class="font-display text-xl font-extrabold text-white tracking-tight">SMILJAN DUTCHBOOK</h1>
+            <p class="text-[10px] tracking-[0.3em] text-amber-300 uppercase font-bold mt-1">Admin Login</p>
+        </div>
+
+        <div id="loginBox" class="glass-panel glow-effect rounded-[2rem] p-8">
+            <form id="formLogin" class="space-y-5">
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-[#f6ecd9] uppercase tracking-wider">Username</label>
+                    <input type="text" id="inputUsername" required autocomplete="username" class="w-full bg-[#294736]/70 border border-amber-400/25 rounded-2xl px-5 py-3.5 text-sm text-white focus:outline-none focus:border-amber-400 transition placeholder:text-[#a8967a]" placeholder="admin">
+                </div>
+
+                <div class="space-y-2">
+                    <label class="block text-xs font-bold text-[#f6ecd9] uppercase tracking-wider">Password</label>
+                    <input type="password" id="inputPassword" required autocomplete="current-password" class="w-full bg-[#294736]/70 border border-amber-400/25 rounded-2xl px-5 py-3.5 text-sm text-white focus:outline-none focus:border-amber-400 transition placeholder:text-[#a8967a]" placeholder="••••••••">
+                </div>
+
+                <p id="pesanError" class="hidden text-xs text-[#e8be6d] font-semibold text-center">Username atau password salah.</p>
+
+                <button type="submit" class="btn-primary w-full rounded-2xl py-3.5 text-sm font-black text-white tracking-wider transition-all">MASUK</button>
+
+            </form>
+        </div>
+
+        <p class="text-center text-[10px] text-[#a8967a] mt-6 leading-relaxed">
+            Login demo sederhana (client-side). Untuk keamanan sesungguhnya,<br>
+            perlu backend/server yang memverifikasi login, bukan cuma kode di browser.
+        </p>
+
+    </div>
+
+    <script>
+        /*
+         * KREDENSIAL ADMIN — GANTI SEBELUM DIPAKAI BENERAN.
+         * Login demo (client-side), kredensial ini kelihatan kalau
+         * orang buka "View Page Source". Cukup buat demo ke owner.
+         */
+        const KREDENSIAL_ADMIN = {
+            username: 'admin',
+            password: 'dutchbook2026'
+        };
+
+        const formLogin = document.getElementById('formLogin');
+        const pesanError = document.getElementById('pesanError');
+        const loginBox = document.getElementById('loginBox');
+
+        formLogin.addEventListener('submit', function (e) {
+            e.preventDefault();
+
+            const username = document.getElementById('inputUsername').value.trim();
+            const password = document.getElementById('inputPassword').value;
+
+            if (username === KREDENSIAL_ADMIN.username && password === KREDENSIAL_ADMIN.password) {
+                sessionStorage.setItem('dutchbookAdminAuth', 'true');
+                window.location.href = 'admin.html';
+            } else {
+                pesanError.classList.remove('hidden');
+                loginBox.classList.add('shake');
+                setTimeout(() => loginBox.classList.remove('shake'), 400);
+            }
+        });
+    </script>
+
+</body>
+</html>
